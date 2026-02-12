@@ -1,4 +1,4 @@
-# Plan 02 — Lexer & Token Types
+# ✅ COMPLETE — Plan 02 — Lexer & Token Types
 
 **Status**: Pending
 
