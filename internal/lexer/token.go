@@ -73,6 +73,10 @@ const (
 	TokenOver        // over
 	TokenLeft        // left
 	TokenRight       // right
+	TokenPar         // par
+	TokenBreak       // break
+	TokenRef         // ref
+	TokenAutonumber  // autonumber
 
 	// Arrows.
 	TokenArrow // ->, -->, <-, <--, <|--,  *--, o--, etc.

@@ -22,9 +22,10 @@ func (e *Error) Error() string {
 
 // Parser is a recursive descent parser for PlantUML diagrams.
 type Parser struct {
-	tokens []lexer.Token
-	pos    int
-	errors []*Error
+	tokens  []lexer.Token
+	pos     int
+	errors  []*Error
+	seqMode bool // true after a sequence-specific keyword is seen
 }
 
 // New creates a new Parser for the given token slice.
@@ -140,6 +141,10 @@ func (p *Parser) parseDiagram() *ast.Diagram {
 }
 
 func (p *Parser) parseStatement() ast.Statement {
+	return p.parseStatementInContext(false)
+}
+
+func (p *Parser) parseStatementInContext(inFragment bool) ast.Statement {
 	tok := p.current()
 	switch tok.Type {
 	case lexer.TokenLineComment:
@@ -168,8 +173,71 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseEnumDef()
 	case lexer.TokenPackage, lexer.TokenNamespace:
 		return p.parsePackage()
+	case lexer.TokenParticipant:
+		p.seqMode = true
+		return p.parseParticipant(ast.ParticipantDefault)
+	case lexer.TokenActor:
+		p.seqMode = true
+		return p.parseParticipant(ast.ParticipantActor)
+	case lexer.TokenBoundary:
+		p.seqMode = true
+		return p.parseParticipant(ast.ParticipantBoundary)
+	case lexer.TokenControl:
+		p.seqMode = true
+		return p.parseParticipant(ast.ParticipantControl)
+	case lexer.TokenEntity:
+		p.seqMode = true
+		return p.parseParticipant(ast.ParticipantEntity)
+	case lexer.TokenDatabase:
+		p.seqMode = true
+		return p.parseParticipant(ast.ParticipantDatabase)
+	case lexer.TokenCollections:
+		p.seqMode = true
+		return p.parseParticipant(ast.ParticipantCollections)
+	case lexer.TokenQueue:
+		p.seqMode = true
+		return p.parseParticipant(ast.ParticipantQueue)
+	case lexer.TokenActivate:
+		p.seqMode = true
+		return p.parseActivate(false)
+	case lexer.TokenDeactivate:
+		p.seqMode = true
+		return p.parseActivate(true)
+	case lexer.TokenReturn:
+		p.seqMode = true
+		return p.parseReturn()
+	case lexer.TokenAlt:
+		p.seqMode = true
+		return p.parseFragment(ast.FragmentAlt)
+	case lexer.TokenLoop:
+		p.seqMode = true
+		return p.parseFragment(ast.FragmentLoop)
+	case lexer.TokenPar:
+		p.seqMode = true
+		return p.parseFragment(ast.FragmentPar)
+	case lexer.TokenBreak:
+		p.seqMode = true
+		return p.parseFragment(ast.FragmentBreak)
+	case lexer.TokenRef:
+		p.seqMode = true
+		return p.parseFragment(ast.FragmentRef)
+	case lexer.TokenGroup:
+		p.seqMode = true
+		return p.parseFragment(ast.FragmentGroup)
+	case lexer.TokenAutonumber:
+		p.seqMode = true
+		return p.parseAutonumber()
 	case lexer.TokenNote:
 		return p.parseNote()
+	case lexer.TokenEquals:
+		return p.parseDivider()
+	case lexer.TokenArrow:
+		if isDelayArrow(tok.Literal) {
+			return p.parseDelay()
+		}
+		p.addError(tok.Pos, fmt.Sprintf("unexpected arrow %q", tok.Literal))
+		p.skipToNextLine()
+		return nil
 	case lexer.TokenIdent:
 		return p.parseIdentStatement()
 	case lexer.TokenError:
@@ -177,6 +245,9 @@ func (p *Parser) parseStatement() ast.Statement {
 		p.skipToNextLine()
 		return nil
 	default:
+		if inFragment && (tok.Type == lexer.TokenElse || tok.Type == lexer.TokenEnd) {
+			return nil
+		}
 		p.addError(tok.Pos, fmt.Sprintf("unexpected %s %q", tok.Type, tok.Literal))
 		p.skipToNextLine()
 		return nil
@@ -226,4 +297,74 @@ func (p *Parser) parseHideShow(isHide bool) *ast.HideShow {
 	tok := p.advance()
 	target := p.readRestOfLine()
 	return &ast.HideShow{Pos: tok.Pos, IsHide: isHide, Target: target}
+}
+
+func (p *Parser) parseNote() *ast.Note {
+	tok := p.advance() // consume 'note'
+	placement := ast.NoteOver
+	target := ""
+	switch p.current().Type {
+	case lexer.TokenLeft:
+		placement = ast.NoteLeft
+		p.advance()
+		if p.current().Type == lexer.TokenOf {
+			p.advance()
+		}
+		target = p.readNoteTarget()
+	case lexer.TokenRight:
+		placement = ast.NoteRight
+		p.advance()
+		if p.current().Type == lexer.TokenOf {
+			p.advance()
+		}
+		target = p.readNoteTarget()
+	case lexer.TokenOver:
+		p.advance()
+		target = p.readNoteTarget()
+	}
+	text := ""
+	if p.current().Type == lexer.TokenColon {
+		p.advance()
+		text = strings.TrimSpace(p.readRestOfLine())
+	} else {
+		text = p.readMultiLineNote()
+	}
+	return &ast.Note{Pos: tok.Pos, Placement: placement, Target: target, Text: text}
+}
+
+func (p *Parser) readNoteTarget() string {
+	if p.current().Type == lexer.TokenIdent || p.current().Type == lexer.TokenString {
+		name := stripQuotes(p.current().Literal)
+		p.advance()
+		for p.current().Type == lexer.TokenComma {
+			name += ","
+			p.advance()
+			if p.current().Type == lexer.TokenIdent || p.current().Type == lexer.TokenString {
+				name += stripQuotes(p.current().Literal)
+				p.advance()
+			}
+		}
+		return name
+	}
+	return ""
+}
+
+func (p *Parser) readMultiLineNote() string {
+	var lines []string
+	for p.current().Type != lexer.TokenEOF && p.current().Type != lexer.TokenEndUML {
+		if p.current().Type == lexer.TokenNewline {
+			p.advance()
+			continue
+		}
+		if p.current().Type == lexer.TokenEnd {
+			p.advance()
+			if p.current().Type == lexer.TokenNote {
+				p.advance()
+			}
+			p.skipToNextLine()
+			break
+		}
+		lines = append(lines, p.readRestOfLine())
+	}
+	return strings.Join(lines, "\n")
 }

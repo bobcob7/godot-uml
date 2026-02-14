@@ -64,23 +64,27 @@ func _() {
 	_ = x[TokenOver-53]
 	_ = x[TokenLeft-54]
 	_ = x[TokenRight-55]
-	_ = x[TokenArrow-56]
-	_ = x[TokenSkinparam-57]
-	_ = x[TokenHide-58]
-	_ = x[TokenShow-59]
-	_ = x[TokenTitle-60]
-	_ = x[TokenHeader-61]
-	_ = x[TokenFooter-62]
-	_ = x[TokenIdent-63]
-	_ = x[TokenString-64]
-	_ = x[TokenNumber-65]
-	_ = x[TokenLineComment-66]
-	_ = x[TokenBlockComment-67]
+	_ = x[TokenPar-56]
+	_ = x[TokenBreak-57]
+	_ = x[TokenRef-58]
+	_ = x[TokenAutonumber-59]
+	_ = x[TokenArrow-60]
+	_ = x[TokenSkinparam-61]
+	_ = x[TokenHide-62]
+	_ = x[TokenShow-63]
+	_ = x[TokenTitle-64]
+	_ = x[TokenHeader-65]
+	_ = x[TokenFooter-66]
+	_ = x[TokenIdent-67]
+	_ = x[TokenString-68]
+	_ = x[TokenNumber-69]
+	_ = x[TokenLineComment-70]
+	_ = x[TokenBlockComment-71]
 }
 
-const _TokenType_name = "ErrorEOFLBraceRBraceLParenRParenLBracketRBracketColonCommaDotNewlinePipeHashLAngleRAngleEqualsSemicolonPlusMinusTildeStartUMLEndUMLClassInterfaceEnumAbstractExtendsImplementsPackageNamespaceAsStaticFieldMethodParticipantActorBoundaryControlEntityDatabaseCollectionsQueueActivateDeactivateReturnAltElseEndLoopGroupNoteOfOverLeftRightArrowSkinparamHideShowTitleHeaderFooterIdentStringNumberLineCommentBlockComment"
+const _TokenType_name = "ErrorEOFLBraceRBraceLParenRParenLBracketRBracketColonCommaDotNewlinePipeHashLAngleRAngleEqualsSemicolonPlusMinusTildeStartUMLEndUMLClassInterfaceEnumAbstractExtendsImplementsPackageNamespaceAsStaticFieldMethodParticipantActorBoundaryControlEntityDatabaseCollectionsQueueActivateDeactivateReturnAltElseEndLoopGroupNoteOfOverLeftRightParBreakRefAutonumberArrowSkinparamHideShowTitleHeaderFooterIdentStringNumberLineCommentBlockComment"
 
-var _TokenType_index = [...]uint16{0, 5, 8, 14, 20, 26, 32, 40, 48, 53, 58, 61, 68, 72, 76, 82, 88, 94, 103, 107, 112, 117, 125, 131, 136, 145, 149, 157, 164, 174, 181, 190, 192, 198, 203, 209, 220, 225, 233, 240, 246, 254, 265, 270, 278, 288, 294, 297, 301, 304, 308, 313, 317, 319, 323, 327, 332, 337, 346, 350, 354, 359, 365, 371, 376, 382, 388, 399, 411}
+var _TokenType_index = [...]uint16{0, 5, 8, 14, 20, 26, 32, 40, 48, 53, 58, 61, 68, 72, 76, 82, 88, 94, 103, 107, 112, 117, 125, 131, 136, 145, 149, 157, 164, 174, 181, 190, 192, 198, 203, 209, 220, 225, 233, 240, 246, 254, 265, 270, 278, 288, 294, 297, 301, 304, 308, 313, 317, 319, 323, 327, 332, 335, 340, 343, 353, 358, 367, 371, 375, 380, 386, 392, 397, 403, 409, 420, 432}
 
 func (i TokenType) String() string {
 	idx := int(i) - 0

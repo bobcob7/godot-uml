@@ -1,0 +1,35 @@
+@startuml
+participant Alice
+actor Bob
+database DB
+
+Alice -> Bob : authenticate
+Bob -> DB : query
+DB --> Bob : result
+Bob --> Alice : response
+Alice -> Bob : logout
+
+note left of Alice : Client
+note right of Bob : Server
+note over DB : Storage
+
+alt success
+  Alice -> Bob : confirmed
+else failure
+  Alice -> Bob : retry
+end
+
+loop 3 times
+  Bob -> DB : poll
+end
+
+== Phase 2 ==
+
+autonumber
+
+... 5 minutes later ...
+
+activate Bob
+Alice -> Bob : resume
+deactivate Bob
+@enduml
