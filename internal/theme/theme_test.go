@@ -169,6 +169,51 @@ func TestResolver(t *testing.T) {
 	})
 }
 
+func TestResolveInt(t *testing.T) {
+	t.Parallel()
+	t.Run("ThemeValue", func(t *testing.T) {
+		t.Parallel()
+		r := NewResolver(Darcula())
+		assert.Equal(t, 13, r.ResolveInt("FontSize", 0))
+		assert.Equal(t, 13, r.ResolveInt("ClassFontSize", 0))
+		assert.Equal(t, 11, r.ResolveInt("ArrowFontSize", 0))
+		assert.Equal(t, 10, r.ResolveInt("Padding", 0))
+		assert.Equal(t, 8, r.ResolveInt("ClassPadding", 0))
+		assert.Equal(t, 8, r.ResolveInt("NotePadding", 0))
+		assert.Equal(t, 1, r.ResolveInt("BorderWidth", 0))
+		assert.Equal(t, 1, r.ResolveInt("ArrowThickness", 0))
+	})
+	t.Run("SkinparamOverride", func(t *testing.T) {
+		t.Parallel()
+		r := NewResolver(Darcula())
+		r.SetSkinparam("defaultFontSize", "16")
+		assert.Equal(t, 16, r.ResolveInt("FontSize", 0))
+	})
+	t.Run("SkinparamDirectKey", func(t *testing.T) {
+		t.Parallel()
+		r := NewResolver(Darcula())
+		r.SetSkinparam("ClassFontSize", "20")
+		assert.Equal(t, 20, r.ResolveInt("ClassFontSize", 0))
+	})
+	t.Run("FallbackOnEmptyTheme", func(t *testing.T) {
+		t.Parallel()
+		r := NewResolver(&Theme{})
+		assert.Equal(t, 12, r.ResolveInt("FontSize", 0))
+	})
+	t.Run("DefaultOnUnknown", func(t *testing.T) {
+		t.Parallel()
+		r := NewResolver(Darcula())
+		assert.Equal(t, 42, r.ResolveInt("nonexistent", 42))
+	})
+	t.Run("InvalidSkinparamUsesFallbackParam", func(t *testing.T) {
+		t.Parallel()
+		r := NewResolver(Darcula())
+		r.SetSkinparam("defaultFontSize", "notanumber")
+		// Invalid skinparam value causes atoiOr to return the fallback parameter
+		assert.Equal(t, 99, r.ResolveInt("FontSize", 99))
+	})
+}
+
 func TestHardcodedFallback(t *testing.T) {
 	t.Parallel()
 	f := hardcodedFallback()
