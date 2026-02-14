@@ -1,6 +1,6 @@
-# Plan 08 — Sugiyama Layout Engine
+# ✅ COMPLETE — Plan 08 — Sugiyama Layout Engine
 
-**Status**: Pending
+**Status**: Complete
 
 **Delivers**: A hierarchical graph layout algorithm (Sugiyama) that takes a graph of nodes with sizes and edges, and produces (x, y) positions for all elements.
 
