@@ -202,6 +202,26 @@ func (r *Resolver) ResolveColor(property string) string {
 	return r.fallbackColor(property)
 }
 
+// ResolveInt returns the integer value for a named property.
+// Resolution order: skinparam → theme → fallback default.
+func (r *Resolver) ResolveInt(property string, fallback int) int {
+	if key, ok := skinparamKeys[property]; ok {
+		if v, exists := r.skinparams[key]; exists {
+			return atoiOr(v, fallback)
+		}
+	}
+	if v, exists := r.skinparams[property]; exists {
+		return atoiOr(v, fallback)
+	}
+	if v := intFieldByName(r.theme, property); v != 0 {
+		return v
+	}
+	if v := intFieldByName(r.fallback, property); v != 0 {
+		return v
+	}
+	return fallback
+}
+
 func (r *Resolver) themeColor(property string) string {
 	return fieldByName(r.theme, property)
 }
@@ -267,4 +287,42 @@ func fieldByName(t *Theme, name string) string {
 	default:
 		return ""
 	}
+}
+
+// intFieldByName returns the int value of a Theme field by name.
+func intFieldByName(t *Theme, name string) int {
+	switch name {
+	case "FontSize":
+		return t.FontSize
+	case "ClassFontSize":
+		return t.ClassFontSize
+	case "ArrowFontSize":
+		return t.ArrowFontSize
+	case "Padding":
+		return t.Padding
+	case "ClassPadding":
+		return t.ClassPadding
+	case "NotePadding":
+		return t.NotePadding
+	case "BorderWidth":
+		return t.BorderWidth
+	case "ArrowThickness":
+		return t.ArrowThickness
+	default:
+		return 0
+	}
+}
+
+func atoiOr(s string, fallback int) int {
+	n := 0
+	for _, ch := range s {
+		if ch < '0' || ch > '9' {
+			return fallback
+		}
+		n = n*10 + int(ch-'0')
+	}
+	if s == "" {
+		return fallback
+	}
+	return n
 }
