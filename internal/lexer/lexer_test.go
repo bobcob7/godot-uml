@@ -88,6 +88,10 @@ func TestNextToken_Keywords(t *testing.T) {
 		{"title", "title", TokenTitle},
 		{"header", "header", TokenHeader},
 		{"footer", "footer", TokenFooter},
+		{"par", "par", TokenPar},
+		{"break", "break", TokenBreak},
+		{"ref", "ref", TokenRef},
+		{"autonumber", "autonumber", TokenAutonumber},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -509,4 +513,33 @@ func TestToken_String(t *testing.T) {
 	tok := Token{Type: TokenClass, Literal: "class", Pos: Pos{1, 1}}
 	assert.Contains(t, tok.String(), "class")
 	assert.Contains(t, tok.String(), "1:1")
+}
+
+func TestTokenTypeString(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name     string
+		tt       TokenType
+		wantName string
+	}{
+		{"Par", TokenPar, "Par"},
+		{"Break", TokenBreak, "Break"},
+		{"Ref", TokenRef, "Ref"},
+		{"Autonumber", TokenAutonumber, "Autonumber"},
+		{"Error", TokenError, "Error"},
+		{"EOF", TokenEOF, "EOF"},
+		{"Arrow", TokenArrow, "Arrow"},
+		{"Participant", TokenParticipant, "Participant"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, tt.wantName, tt.tt.String())
+		})
+	}
+	t.Run("InvalidValue", func(t *testing.T) {
+		t.Parallel()
+		invalid := TokenType(9999)
+		assert.Contains(t, invalid.String(), "TokenType(9999)")
+	})
 }
