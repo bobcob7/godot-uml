@@ -1,6 +1,6 @@
-# Plan 13 — CLI Interface
+COMPLETE # Plan 13 — CLI Interface
 
-**Status**: Pending
+**Status**: Complete
 
 **Delivers**: A command-line interface for rendering `.puml` files to SVG, validating files, and starting the server.
 
