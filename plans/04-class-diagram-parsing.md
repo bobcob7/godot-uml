@@ -1,6 +1,6 @@
-# Plan 04 — Class Diagram Parsing
+# ✅ COMPLETE — Plan 04 — Class Diagram Parsing
 
-**Status**: Pending
+**Status**: Complete
 
 **Delivers**: Full parsing of PlantUML class diagram syntax into the AST.
 

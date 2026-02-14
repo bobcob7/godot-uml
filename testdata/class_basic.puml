@@ -1,0 +1,43 @@
+@startuml
+class Animal {
+  +name : String
+  -age : int
+  #weight : float
+  ~internal : bool
+  +speak() : void
+  -calculateAge(birthYear : int) : int
+  {static} count : int
+  {abstract} move() : void
+}
+
+abstract class Shape {
+  +area() : double
+}
+
+interface Drawable {
+  +draw() : void
+}
+
+enum Color {
+  RED
+  GREEN
+  BLUE
+}
+
+Animal --|> Shape
+Animal ..|> Drawable
+Dog --|> Animal : extends
+Animal "1" --> "*" Leg : has
+Animal --o Habitat
+Animal --* Heart
+
+package com.example {
+  class Foo
+  class Bar
+}
+
+note left of Animal : This is an animal
+
+hide empty members
+skinparam backgroundColor #FFFFFF
+@enduml
