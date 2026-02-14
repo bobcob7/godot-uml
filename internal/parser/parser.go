@@ -56,6 +56,14 @@ func (p *Parser) current() lexer.Token {
 	return p.tokens[p.pos]
 }
 
+func (p *Parser) peek() lexer.Token {
+	next := p.pos + 1
+	if next >= len(p.tokens) {
+		return lexer.Token{Type: lexer.TokenEOF}
+	}
+	return p.tokens[next]
+}
+
 func (p *Parser) advance() lexer.Token {
 	tok := p.current()
 	if p.pos < len(p.tokens) {
@@ -102,7 +110,6 @@ func (p *Parser) parseDiagram() *ast.Diagram {
 	case lexer.TokenStartUML:
 		diagram.Pos = tok.Pos
 		p.advance()
-		// Optional diagram name on same line.
 		if p.current().Type == lexer.TokenIdent || p.current().Type == lexer.TokenString {
 			diagram.Name = p.current().Literal
 			p.advance()
@@ -114,7 +121,6 @@ func (p *Parser) parseDiagram() *ast.Diagram {
 		p.addError(tok.Pos, fmt.Sprintf("expected @startuml, got %s", tok.Type))
 		p.skipToNextLine()
 	}
-	// Parse body statements.
 	for p.current().Type != lexer.TokenEndUML && p.current().Type != lexer.TokenEOF {
 		p.skipNewlines()
 		if p.current().Type == lexer.TokenEndUML || p.current().Type == lexer.TokenEOF {
@@ -152,6 +158,20 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseHideShow(true)
 	case lexer.TokenShow:
 		return p.parseHideShow(false)
+	case lexer.TokenClass:
+		return p.parseClassDef(false)
+	case lexer.TokenAbstract:
+		return p.parseAbstract()
+	case lexer.TokenInterface:
+		return p.parseInterfaceDef()
+	case lexer.TokenEnum:
+		return p.parseEnumDef()
+	case lexer.TokenPackage, lexer.TokenNamespace:
+		return p.parsePackage()
+	case lexer.TokenNote:
+		return p.parseNote()
+	case lexer.TokenIdent:
+		return p.parseIdentStatement()
 	case lexer.TokenError:
 		p.addError(tok.Pos, fmt.Sprintf("unexpected token: %s", tok.Literal))
 		p.skipToNextLine()
@@ -174,25 +194,25 @@ func (p *Parser) parseBlockComment() ast.Statement {
 }
 
 func (p *Parser) parseTitle() ast.Statement {
-	tok := p.advance() // consume 'title'
+	tok := p.advance()
 	text := p.readRestOfLine()
 	return &ast.Comment{Pos: tok.Pos, Text: "title " + text}
 }
 
 func (p *Parser) parseHeader() ast.Statement {
-	tok := p.advance() // consume 'header'
+	tok := p.advance()
 	text := p.readRestOfLine()
 	return &ast.Comment{Pos: tok.Pos, Text: "header " + text}
 }
 
 func (p *Parser) parseFooter() ast.Statement {
-	tok := p.advance() // consume 'footer'
+	tok := p.advance()
 	text := p.readRestOfLine()
 	return &ast.Comment{Pos: tok.Pos, Text: "footer " + text}
 }
 
 func (p *Parser) parseSkinparam() *ast.Skinparam {
-	tok := p.advance() // consume 'skinparam'
+	tok := p.advance()
 	name := ""
 	if p.current().Type == lexer.TokenIdent {
 		name = p.current().Literal
@@ -203,7 +223,7 @@ func (p *Parser) parseSkinparam() *ast.Skinparam {
 }
 
 func (p *Parser) parseHideShow(isHide bool) *ast.HideShow {
-	tok := p.advance() // consume 'hide' or 'show'
+	tok := p.advance()
 	target := p.readRestOfLine()
 	return &ast.HideShow{Pos: tok.Pos, IsHide: isHide, Target: target}
 }
