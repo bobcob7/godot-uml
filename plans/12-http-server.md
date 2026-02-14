@@ -1,6 +1,6 @@
-# Plan 12 — HTTP Server & Live Editor
+COMPLETE # Plan 12 — HTTP Server & Live Editor
 
-**Status**: Pending
+**Status**: Complete
 
 **Delivers**: A standalone HTTP server with PlantUML-compatible API endpoints and a minimal live editor (textarea + SVG preview).
 

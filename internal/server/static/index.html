@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>godot-uml Editor</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: sans-serif; background: #1e1e1e; color: #ccc; height: 100vh; display: flex; flex-direction: column; }
+header { background: #2d2d2d; padding: 8px 16px; border-bottom: 1px solid #444; display: flex; align-items: center; gap: 12px; }
+header h1 { font-size: 16px; color: #e0e0e0; }
+.container { display: flex; flex: 1; overflow: hidden; }
+.editor { flex: 1; display: flex; flex-direction: column; border-right: 1px solid #444; }
+.preview { flex: 1; display: flex; flex-direction: column; }
+textarea { flex: 1; background: #1e1e1e; color: #d4d4d4; border: none; padding: 16px; font-family: 'Consolas', 'Monaco', monospace; font-size: 14px; resize: none; outline: none; tab-size: 2; }
+.preview-content { flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 16px; background: #252526; }
+.preview-content svg { max-width: 100%; max-height: 100%; }
+.errors { background: #3c1f1f; color: #f48771; padding: 8px 16px; font-family: monospace; font-size: 12px; max-height: 120px; overflow-y: auto; display: none; }
+.errors.visible { display: block; }
+.status { background: #2d2d2d; padding: 4px 16px; font-size: 12px; color: #888; border-top: 1px solid #444; }
+</style>
+</head>
+<body>
+<header>
+<h1>godot-uml</h1>
+</header>
+<div class="container">
+<div class="editor">
+<textarea id="input" spellcheck="false">@startuml
+class Animal {
+  +name : String
+  -age : int
+  +speak() : void
+}
+
+class Dog {
+  +breed : String
+}
+
+Dog --|> Animal
+@enduml</textarea>
+<div id="errors" class="errors"></div>
+</div>
+<div class="preview">
+<div id="preview" class="preview-content"></div>
+</div>
+</div>
+<div class="status"><span id="status">Ready</span></div>
+<script>
+const input = document.getElementById('input');
+const preview = document.getElementById('preview');
+const errors = document.getElementById('errors');
+const status = document.getElementById('status');
+let timer = null;
+function render() {
+  const text = input.value;
+  if (!text.trim()) { preview.innerHTML = ''; return; }
+  status.textContent = 'Rendering...';
+  fetch('/render', { method: 'POST', body: text })
+    .then(resp => {
+      if (resp.ok) {
+        return resp.text().then(svg => {
+          preview.innerHTML = svg;
+          errors.classList.remove('visible');
+          errors.textContent = '';
+          status.textContent = 'Ready';
+        });
+      }
+      return resp.json().then(data => {
+        if (data.errors) {
+          errors.textContent = data.errors.map(e =>
+            'Line ' + e.line + ':' + e.column + ': ' + e.message
+          ).join('\n');
+          errors.classList.add('visible');
+        }
+        status.textContent = 'Errors found';
+      });
+    })
+    .catch(err => {
+      status.textContent = 'Error: ' + err.message;
+    });
+}
+input.addEventListener('input', () => {
+  clearTimeout(timer);
+  timer = setTimeout(render, 300);
+});
+render();
+</script>
+</body>
+</html>
