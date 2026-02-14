@@ -276,11 +276,14 @@ func (p *Parser) consumeOptionalNewline() {
 }
 
 // parseIdentStatement handles lines starting with an identifier, which could be
-// a relationship (e.g., "Foo --> Bar") or other identifier-based statement.
+// a relationship (e.g., "Foo --> Bar"), a message (e.g., "Alice -> Bob : hello"),
+// or other identifier-based statement.
 func (p *Parser) parseIdentStatement() ast.Statement {
+	if p.seqMode {
+		return p.parseSequenceIdentStatement()
+	}
 	pos := p.current().Pos
 	leftName := p.readClassName()
-	// Check for cardinality before arrow: Foo "1" --> "*" Bar
 	leftCard := ""
 	if p.current().Type == lexer.TokenString {
 		leftCard = strings.Trim(p.current().Literal, "\"")
@@ -289,7 +292,6 @@ func (p *Parser) parseIdentStatement() ast.Statement {
 	if p.current().Type == lexer.TokenArrow {
 		return p.parseRelationship(pos, leftName, leftCard)
 	}
-	// Not a relationship, skip rest of line.
 	p.skipToNextLine()
 	return &ast.Comment{Pos: pos, Text: leftName}
 }
@@ -398,32 +400,3 @@ func (p *Parser) parsePackage() ast.Statement {
 	return pkg
 }
 
-func (p *Parser) parseNote() ast.Statement {
-	tok := p.advance() // consume 'note'
-	n := &ast.Note{Pos: tok.Pos}
-	switch p.current().Type {
-	case lexer.TokenLeft:
-		n.Placement = ast.NoteLeft
-		p.advance()
-	case lexer.TokenRight:
-		n.Placement = ast.NoteRight
-		p.advance()
-	case lexer.TokenOver:
-		n.Placement = ast.NoteOver
-		p.advance()
-	}
-	if p.current().Type == lexer.TokenOf {
-		p.advance()
-	}
-	if p.current().Type == lexer.TokenIdent {
-		n.Target = p.current().Literal
-		p.advance()
-	}
-	if p.current().Type == lexer.TokenColon {
-		p.advance()
-		n.Text = strings.TrimSpace(p.readRestOfLine())
-	} else {
-		n.Text = strings.TrimSpace(p.readRestOfLine())
-	}
-	return n
-}

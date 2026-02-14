@@ -1,6 +1,6 @@
 # Plan 05 — Sequence Diagram Parsing
 
-**Status**: Pending
+**Status**: Complete
 
 **Delivers**: Full parsing of PlantUML sequence diagram syntax into the AST.
 
