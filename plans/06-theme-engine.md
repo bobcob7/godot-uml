@@ -1,6 +1,6 @@
-# Plan 06 — Theme Engine & Skinparam System
+# ✅ COMPLETE Plan 06 — Theme Engine & Skinparam System
 
-**Status**: Pending
+**Status**: Complete
 
 **Delivers**: A theme/styling engine that resolves visual properties for any diagram element. Ships with the Darcula theme as default.
 
