@@ -1,6 +1,6 @@
-# Plan 11 — Public Library API
+COMPLETE # Plan 11 — Public Library API
 
-**Status**: Pending
+**Status**: Complete
 
 **Delivers**: The `pkg/goduml` public API that ties together parsing, validation, layout, and rendering into a simple interface for Go consumers.
 
