@@ -1,6 +1,6 @@
-# Plan 03 — AST Node Types & Parser Foundation
+# ✅ COMPLETE Plan 03 — AST Node Types & Parser Foundation
 
-**Status**: Pending
+**Status**: Complete
 
 **Delivers**: AST type definitions for all supported diagram elements, and a recursive descent parser framework that can parse `@startuml`/`@enduml` boundaries, comments, titles, and empty diagrams.
 
