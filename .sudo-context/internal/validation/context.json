@@ -1,0 +1,25 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "internal/validation",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:31:15Z",
+  "sections": {
+    "description": "Semantic validation and error reporting for parsed PlantUML diagrams.",
+    "purpose": "This package provides semantic validation of PlantUML diagrams after parsing, ensuring diagram structure and references are semantically valid. It works downstream of the parser to catch issues that are syntactically correct but semantically problematic, such as references to undefined elements. Validation errors are reported with accurate source positions for user-friendly error messages.",
+    "functionality": "Validates diagram semantic correctness including: class/interface/enum existence and uniqueness, relationship reference validity, package scope rules, and cardinality constraints. Currently minimal with placeholder structure; implementation planned in future phases. Provides error reporting integration with the public API via gouml.Validate().",
+    "strengths": [
+      "Positioned correctly downstream of parser for semantic-only checks",
+      "Integrates with public API (gouml.Validate) and error reporting infrastructure",
+      "Error type (Error struct in gouml) already supports source position tracking"
+    ],
+    "weaknesses": [
+      "Currently empty implementation beyond package declaration",
+      "No validation rules implemented yet",
+      "No test coverage",
+      "Blocking dependency not yet established (phase ordering not strict)"
+    ],
+    "test_coverage": "None \u2014 implementation is placeholder.",
+    "dependencies": "Internal: github.com/bobcob7/go-uml/internal/ast (diagram AST types), github.com/bobcob7/go-uml/internal/lexer (Pos type for error reporting). External: None.",
+    "files": "| File | Description |\n|------|-------------|\n| validation.go | Package definition with semantic validation purpose statement |"
+  }
+}

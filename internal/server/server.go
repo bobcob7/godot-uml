@@ -1,4 +1,4 @@
-// Package server provides the HTTP server and live editor for godot-uml.
+// Package server provides the HTTP server and live editor for go-uml.
 package server
 
 import (
@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bobcob7/godot-uml/internal/encoding"
-	"github.com/bobcob7/godot-uml/pkg/goduml"
+	"github.com/bobcob7/go-uml/internal/encoding"
+	"github.com/bobcob7/go-uml/pkg/gouml"
 )
 
 //go:embed static/*
@@ -35,7 +35,7 @@ func DefaultConfig() Config {
 	}
 }
 
-// Server is the HTTP server for godot-uml.
+// Server is the HTTP server for go-uml.
 type Server struct {
 	config Config
 	mux    *http.ServeMux
@@ -73,7 +73,7 @@ func (s *Server) handleRender(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "failed to read body", http.StatusBadRequest)
 		return
 	}
-	errs := goduml.Validate(strings.NewReader(string(body)))
+	errs := gouml.Validate(strings.NewReader(string(body)))
 	if len(errs) > 0 {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
@@ -85,7 +85,7 @@ func (s *Server) handleRender(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "image/svg+xml")
-	if err := goduml.Render(strings.NewReader(string(body)), w); err != nil {
+	if err := gouml.Render(strings.NewReader(string(body)), w); err != nil {
 		http.Error(w, fmt.Sprintf("render error: %s", err), http.StatusInternalServerError)
 		return
 	}
@@ -103,7 +103,7 @@ func (s *Server) handleSVG(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "image/svg+xml")
-	if err := goduml.Render(strings.NewReader(text), w); err != nil {
+	if err := gouml.Render(strings.NewReader(text), w); err != nil {
 		http.Error(w, fmt.Sprintf("render error: %s", err), http.StatusInternalServerError)
 		return
 	}

@@ -1,0 +1,37 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "internal/server",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:30:54Z",
+  "sections": {
+    "description": "HTTP server implementation providing a live editor interface and REST API for PlantUML diagram rendering via the go-uml library.",
+    "purpose": "Serves a web-based editor at the root path where users can write PlantUML diagrams and render them to SVG. Provides two rendering endpoints: a POST endpoint for direct diagram text submission and a GET endpoint for shareable encoded diagram links. Handles validation errors gracefully with detailed JSON error responses.",
+    "functionality": "Exposes three HTTP handlers: GET / serves the HTML editor UI, POST /render accepts PlantUML diagram text and returns SVG output, and GET /svg/{encoded...} decodes URL-encoded diagrams and renders them. All rendering operations go through the public gouml.Render API with validation via gouml.Validate. Includes configurable timeouts and host/port binding through Config.",
+    "strengths": [
+      "Simple, focused responsibility: HTTP request routing and response formatting",
+      "Comprehensive handler test coverage including happy path, validation errors, and edge cases",
+      "Clear separation of concerns with embedded static files and external rendering logic",
+      "Proper HTTP headers and status codes for different response types",
+      "Configurable server parameters through Config struct"
+    ],
+    "weaknesses": [
+      "No logging in handlers\u2014errors logged implicitly via http.Error",
+      "No per-request context propagation to rendering layer",
+      "Embedded static files limit runtime customization of UI",
+      "No rate limiting or request validation beyond diagram validation",
+      "Error responses in POST /render don't include full error details in some failure modes"
+    ],
+    "test_coverage": "Single TestServer parent with 7 subtests covering: valid class diagram rendering, valid sequence diagram rendering, invalid diagram validation with error format, empty body handling, encoded SVG retrieval, invalid encoding errors, editor HTML serving, and 404 handling on non-root paths. Separate TestDefaultConfig validates Config defaults. All tests use t.Parallel(). Tests use httptest for request/response capture and verify Content-Type headers, status codes, and response body content.",
+    "dependencies": {
+      "internal": [
+        "internal/encoding: Encode/Decode for shareable diagram links"
+      ],
+      "external": [
+        "github.com/bobcob7/go-uml/pkg/gouml: Validate and Render diagram APIs",
+        "net/http: Standard HTTP server and request handling",
+        "encoding/json: JSON error response encoding"
+      ]
+    },
+    "files": "| File | Description |\n|------|-------------|\n| server.go | HTTP server implementation with Config, Server type, route handlers for /render POST, /svg/{encoded} GET, and / GET (editor) |\n| server_test.go | Comprehensive test suite with 7 handler subtests and Config defaults test |"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "cmd",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:31:42Z",
+  "sections": {
+    "description": "Container directory for command-line application entry points.",
+    "purpose": "Organizes executable entry points for the godot-uml project. Currently contains the go-uml CLI application which provides a command-line interface for rendering, validating, and serving PlantUML diagrams. Follows Go project convention of separating CLI tooling from library code.",
+    "strengths": [
+      "Clear separation of concerns between library (pkg, internal) and executables (cmd)",
+      "Scalable structure for adding additional CLI tools or applications",
+      "Houses the main entry point for the primary godot-uml command-line tool"
+    ],
+    "weaknesses": [
+      "Currently contains only one subdirectory (go-uml), minimal organizational value at present",
+      "May be underutilized if additional CLI tools are not planned"
+    ],
+    "test_coverage": "No direct tests at cmd level; testing is handled at cmd/go-uml level which includes comprehensive unit and integration tests.",
+    "dependencies": "Internal: Depends on cmd/go-uml which in turn depends on pkg/gouml (rendering engine) and internal/server (HTTP server). External: Standard library for CLI execution.",
+    "functionality": "Serves as the container for all executable entry points. The go-uml application within provides four main commands: render (PlantUML to SVG), validate (syntax checking), serve (interactive HTTP editor), and version (build information).",
+    "files": "No files at top level. Contains subdirectory: cmd/go-uml (CLI application with main.go and main_test.go)."
+  }
+}

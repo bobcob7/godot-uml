@@ -1,0 +1,31 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "internal/layout",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:30:44Z",
+  "sections": {
+    "description": "Implements the Sugiyama hierarchical graph layout algorithm, which assigns coordinates to nodes to create a hierarchical visualization with layered nodes and crossing minimization.",
+    "purpose": "Provides core graph layout functionality that transforms an abstract directed graph (with nodes and edges) into positioned coordinates suitable for diagram rendering. Uses the five-phase Sugiyama algorithm: cycle removal, layer assignment, virtual node insertion, edge crossing minimization, and coordinate assignment. The layout process handles edge cases like cycles, self-loops, and disconnected subgraphs.",
+    "strengths": [
+      "Complete Sugiyama implementation with all five standard phases",
+      "Handles edge cases: cycles, self-loops, disconnected graphs, multi-edges",
+      "Virtual node insertion correctly breaks long edges spanning multiple layers",
+      "Barycenter heuristic for crossing minimization reduces visual complexity",
+      "No node overlap in final coordinates through horizontal centering",
+      "Pure functional algorithm (modifies nodes in place) without external dependencies",
+      "Comprehensive test coverage with diverse graph topologies"
+    ],
+    "weaknesses": [
+      "Barycenter heuristic limited to 4 passes (tuned but may not be optimal for complex graphs)",
+      "No direct support for edge labels in layout calculations",
+      "Virtual nodes are discarded during overlap detection, potentially hiding long-edge crossings",
+      "Layer assignment uses simple longest-path approach (no priority considerations)",
+      "Horizontal centering may not align with aesthetic preferences in asymmetric graphs",
+      "No configuration for pass count in crossing minimization"
+    ],
+    "test_coverage": "TestLayout covers fundamental scenarios: empty graphs, single nodes, linear chains, diamond patterns, cyclic graphs, self-loops, disconnected subgraphs, and multi-edges. TestNoOverlap validates non-overlapping node placement with varying geometries. TestDefaultOptions verifies configuration. Helper function assertNoOverlap checks all real nodes in each layer for spatial conflicts. Tests use parallel subtests with assert/require patterns.",
+    "dependencies": "Internal: Uses subdirectories for algorithm phases (coordinate/, crossing/, layering/). External: github.com/stretchr/testify v1.11.1 (testing only, via assert/require). Standard library: testing package.",
+    "functionality": "Exports Graph, Node, Edge, Options types and Layout, DefaultOptions functions. Node tracks ID, dimensions, coordinates, layer/order, and virtual flag. Edge records source, destination, label, and reversal status. Options configures node padding and layer spacing. Layout() runs the full 5-phase algorithm, modifying node positions in place. Handles arbitrary graph structures and produces hierarchically layered output.",
+    "files": "| File | Description |\n|------|-------------|\n| layout.go | Core algorithm implementation with five phases: cycle removal (DFS-based), layer assignment (longest-path BFS), virtual node insertion, crossing minimization (barycenter heuristic), and coordinate assignment with horizontal centering |\n| layout_test.go | Comprehensive test suite with subtests covering edge cases: empty/single/chain/diamond/cyclic/self-loop/disconnected/multi-edge graphs, overlap detection, and default options validation |"
+  }
+}

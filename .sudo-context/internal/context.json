@@ -1,0 +1,43 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "internal",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:31:57Z",
+  "sections": {
+    "description": "Container directory housing the complete internal package infrastructure for PlantUML parsing, rendering, layout, and web serving.",
+    "purpose": "The internal directory organizes all non-public packages that implement the core PlantUML diagram processing pipeline. It provides a clear architectural separation between the public API (in pkg/) and implementation details. Packages here follow the Go idiom of keeping implementation private, with consumers accessing functionality through well-defined public interfaces exposed at the package level.",
+    "strengths": [
+      "Clear architectural organization with separate packages for each concern: lexing, parsing, AST, rendering, layout, styling, validation, and HTTP serving",
+      "Well-documented subdirectories: each package has complete context documentation describing purpose, strengths, weaknesses, test coverage, and dependencies",
+      "Dependency hierarchy supports the processing pipeline: lexer \u2192 parser \u2192 AST \u2192 renderer, with orthogonal packages for layout, theme, font, and validation",
+      "Strong test coverage across all packages with consistent testing patterns (t.Parallel, table-driven subtests, testify assertions)",
+      "Self-contained packages with minimal cross-dependencies, supporting independent testing and evolution"
+    ],
+    "weaknesses": [
+      "No unified error handling or error types\u2014each package defines domain-specific errors",
+      "Limited logging infrastructure\u2014primarily implicit error handling via http.Error",
+      "Validation package is a placeholder with minimal implementation",
+      "No shared interfaces or traits for common operations (e.g., no Renderer interface pattern)",
+      "Limited visitor pattern support in AST\u2014consumers must implement their own tree traversal"
+    ],
+    "test_coverage": "Comprehensive test coverage across all subdirectories. Each package includes focused unit tests following project conventions: t.Parallel() on all tests, table-driven subtests, testify assertions (require for preconditions, assert for verifications). Coverage includes: lexer/parser (50+ tests), AST (structure and interface conformance), renderer (40+ tests), layout (edge cases and graph topologies), font (multi-line text, all font families), theme (style resolution and precedence), server (HTTP handlers), encoding (round-trip compression), validation (placeholder). Coverage percentage varies by maturity: core pipeline (lexer/parser/AST/renderer) fully tested, supporting packages (layout/theme/font) well-tested, validation placeholder.",
+    "dependencies": {
+      "internal": [
+        "Lexer provides tokenization foundation for parser",
+        "Parser builds AST from lexer tokens, consumed by renderer and validators",
+        "AST types consumed by parser, renderer, and validators",
+        "Renderer imports: ast (diagram structure), font (text measurement), layout (node positioning), theme (styling)",
+        "Server imports: encoding (URL compression), public API (gouml.Render, gouml.Validate)",
+        "Tools tracks development dependencies (golangci-lint, gofumpt) via //go:build tools pattern"
+      ],
+      "external": [
+        "golang.org/x/image/font (gofont embedded fonts for text measurement)",
+        "github.com/stretchr/testify (testing assertions across all packages)",
+        "github.com/golangci/golangci-lint v2.9.0 (static analysis)",
+        "mvdan.cc/gofumpt v0.9.2 (code formatting)"
+      ]
+    },
+    "functionality": "Provides complete PlantUML processing pipeline: (1) Lexer tokenizes diagram text with position tracking; (2) Parser builds AST from tokens with error recovery; (3) AST represents all diagram elements (classes, sequences, relationships); (4) Renderer converts AST to SVG output; (5) Layout engine positions diagram nodes using Sugiyama algorithm; (6) Font provides text measurement for accurate layout; (7) Theme manages styling with hierarchical resolution; (8) Validation checks semantic correctness (placeholder); (9) Encoding handles URL compression for shareable links; (10) Server provides HTTP interface with live editor and REST API; (11) Tools manages development tool versions.",
+    "files": "No files at the top level of internal directory. The directory contains 12 subdirectories, each as an independent package: ast/, encoding/, font/, layout/, lexer/, parser/, renderer/, server/, theme/, tools/, validation/, plus renderer/svg subpackage. All subdirectories are documented with full context."
+  }
+}

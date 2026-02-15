@@ -1,0 +1,28 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "internal/ast",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:30:44Z",
+  "sections": {
+    "description": "Defines abstract syntax tree (AST) node types representing all elements of PlantUML diagrams including class diagrams, sequence diagrams, relationships, and layout directives.",
+    "purpose": "This package provides the core data structures for representing parsed PlantUML diagrams as an in-memory tree. It defines interfaces (Node, Statement, Member) and concrete types for every construct the parser can generate, including class/interface/enum definitions, relationships, sequence participants/messages, and formatting directives. Consumers like the renderer and validators traverse this AST to generate SVG output or validate diagram structure.",
+    "strengths": [
+      "Clean interface-based design with Node, Statement, and Member interfaces enabling type-safe traversal",
+      "Comprehensive coverage of PlantUML constructs across multiple diagram types (class, sequence, common)",
+      "Struct-based AST nodes with explicit lexer.Pos fields enabling precise error reporting and source mapping",
+      "Sealed by private methods (stmtNode(), memberNode()) preventing external implementations",
+      "Well-tested with focused unit tests verifying interface conformance and constant values"
+    ],
+    "weaknesses": [
+      "No AST visitor pattern or traversal helpers - consumers must implement their own tree walking",
+      "Raw string fields (Params, Arrow, ReturnType) preserve lexer output without semantic parsing",
+      "No built-in validation of semantic constraints (e.g., cycle detection in relationships)",
+      "Limited extensibility without modifying the package - no plugin or visitor pattern",
+      "Few helper methods on nodes - mostly just Position() and marker methods"
+    ],
+    "test_coverage": "All files have corresponding test files (ast_test.go, ast_class_test.go, ast_common_test.go, ast_sequence_test.go). Tests verify interface conformance (Node, Statement, Member implementations), constant value ranges (Visibility, Modifier, RelationshipType, etc.), and position tracking. Uses subtests with t.Parallel() following project conventions. Tests focus on structure and interface contracts rather than behavior.",
+    "dependencies": "Internal: lexer (position information). External: testify for assertions in tests.",
+    "functionality": "Provides foundational AST node types consumed by parser (constructs AST from tokens), renderer (traverses AST to generate SVG), and potential validators. Exports interfaces (Node, Statement, Member) and concrete types for all diagram elements: Diagram, Comment, Note, Skinparam, HideShow, ClassDef, InterfaceDef, EnumDef, Field, Method, Relationship, Package, Participant, Message, Fragment, ElsePart, Activate, Return, Autonumber, Divider, Delay.",
+    "files": "| File | Description |\n| --- | --- |\n| ast.go | Core Node and Statement interfaces; Diagram root type; Visibility and Modifier enums; Comment node |\n| ast_class.go | Class diagram constructs: RelationshipType, ArrowDirection enums; ClassDef, InterfaceDef, EnumDef types; Field and Method member types; Relationship and Package statement types |\n| ast_common.go | Shared elements: NotePosition enum; Note, Skinparam, HideShow statement types |\n| ast_sequence.go | Sequence diagram constructs: ParticipantKind, FragmentKind enums; Participant, Message, Fragment, ElsePart, Activate, Return, Autonumber, Divider, Delay statement types |\n| ast_test.go | Tests for Diagram, Comment types and Node interface conformance |\n| ast_class_test.go | Tests for class diagram types (ClassDef, InterfaceDef, EnumDef, Field, Method, Relationship, Package) and enums (RelationshipType, ArrowDirection, Visibility, Modifier) |\n| ast_common_test.go | Tests for Note, Skinparam, HideShow types and NotePosition enum |\n| ast_sequence_test.go | Tests for sequence diagram types (Participant, Message, Fragment, ElsePart, Activate, Return, Autonumber, Divider, Delay) and enums (ParticipantKind, FragmentKind) |"
+  }
+}

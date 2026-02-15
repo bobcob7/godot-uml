@@ -1,0 +1,26 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "pkg",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:31:47Z",
+  "sections": {
+    "description": "Container directory holding public library packages for the godot-uml project.",
+    "purpose": "Organizes and exposes public-facing Go packages that external projects can import and use. Currently contains the `gouml` package which provides the main user-facing API for rendering PlantUML diagrams to SVG. Follows Go project layout conventions by keeping public packages under `pkg/` to signal they are part of the stable, exported API surface.",
+    "strengths": [
+      "Clean separation between internal implementation and public API",
+      "Follows Go project layout best practices with `pkg/` directory convention",
+      "Single well-designed public package (gouml) with comprehensive functionality",
+      "Easy to extend with additional public packages as the project grows",
+      "Clear contract for consumers \u2014 anything in `pkg/` is stable and documented"
+    ],
+    "weaknesses": [
+      "Currently only contains one subdirectory (gouml), making the container somewhat minimal",
+      "No shared utilities or base types across multiple public packages yet",
+      "No version management or backward compatibility strategy documented at the container level"
+    ],
+    "test_coverage": "No direct test coverage at the container level. All testing is performed in subdirectories (gouml_test.go handles the public API tests). The test suite validates all exported functions, options, and error handling as a whole.",
+    "dependencies": "Internal: github.com/bobcob7/godot-uml/pkg/gouml (re-exports the public API). External: None at container level (dependencies are managed by individual packages).",
+    "functionality": "Serves as the public API namespace for godot-uml, housing the gouml package which provides diagram rendering, parsing, validation, and customization capabilities. Provides a stable, documented interface for importing and using godot-uml in other Go projects.",
+    "files": "No top-level files in this directory. Contains only the `gouml/` subdirectory which holds the main public API package."
+  }
+}

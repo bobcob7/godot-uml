@@ -1,0 +1,28 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "internal/theme",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:30:58Z",
+  "sections": {
+    "description": "Provides theme definitions and hierarchical style resolution for diagram rendering with support for Darcula theme and skinparam overrides.",
+    "purpose": "The theme package defines the complete visual styling for PlantUML diagram rendering and manages style resolution through a three-level hierarchy (skinparam overrides \u2192 theme values \u2192 hardcoded fallbacks). It abstracts color and dimension properties for all diagram elements including classes, interfaces, enums, arrows, notes, sequences, and packages. This allows consistent styling across diagram types and enables both predefined themes and user customization.",
+    "strengths": [
+      "Complete color and dimension coverage for all diagram element types",
+      "Three-level resolution hierarchy enables predictable style application",
+      "Darcula theme provides sensible dark-mode defaults matching JetBrains IDE palette",
+      "Flexible skinparam mapping supports both PlantUML convention names and direct property names",
+      "Safe integer parsing with fallback handling for invalid skinparam values"
+    ],
+    "weaknesses": [
+      "Manual field access via switch statements leads to verbose reflective-style code",
+      "Limited to predefined themes; requires code changes to add new themes",
+      "Property names hardcoded across multiple functions instead of centralized registry",
+      "No validation of color format or integer ranges",
+      "Spacing/padding/border values treated as integers without unit abstraction"
+    ],
+    "test_coverage": "Comprehensive test suite covering Theme creation, Resolver initialization, and color/integer resolution. Tests verify: Darcula palette values, theme defaults, skinparam override precedence, fallback behavior on empty themes, unknown property handling, multiple skinparam application, all PlantUML skinparam key mappings, complete Darcula color set, integer resolution with skinparam overrides, invalid integer parsing with fallback values, and hardcoded fallback theme values.",
+    "dependencies": "Internal: None. External: testing via testify (assert, require); uses only Go standard library (strings via switch statements, strconv via atoiOr function).",
+    "functionality": "Provides Theme struct containing ~35 style properties (colors, fonts, spacing); Darcula() factory function returning JetBrains-themed defaults; Resolver for hierarchical style lookup with SetSkinparam() to override styles and ResolveColor()/ResolveInt() for property resolution; hardcodedFallback() providing minimal white-theme defaults for complete fallback coverage.",
+    "files": "| File | Description |\n| --- | --- |\n| theme.go | Theme struct definition, Darcula and hardcoded fallback themes, Resolver implementation with hierarchical resolution logic, property field accessors via switch statements |\n| theme_test.go | Comprehensive test suite for Theme creation, Resolver initialization, color/integer resolution, skinparam precedence, and fallback behavior across all theme properties |"
+  }
+}

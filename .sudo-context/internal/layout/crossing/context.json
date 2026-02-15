@@ -1,0 +1,29 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "internal/layout/crossing",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:30:01Z",
+  "sections": {
+    "description": "Implements edge crossing minimization for the Sugiyama hierarchical layout algorithm using the barycenter heuristic.",
+    "purpose": "Reduces the number of edge crossings in a layered graph by reordering nodes within each layer. Uses the barycenter heuristic with multiple alternating up and down passes to produce visually cleaner layouts. This is phase 4 of the Sugiyama algorithm, called after layer assignment and before coordinate assignment.",
+    "strengths": [
+      "Efficient O(n\u00b2) inversion counting for crossing detection",
+      "Barycenter heuristic produces good heuristic results with reasonable time complexity",
+      "Multiple passes (4 iterations) with alternating directions improve quality",
+      "Stable insertion sort preserves relative order for nodes with equal barycenters",
+      "Handles graphs with no edges and empty layers gracefully",
+      "Well-tested with 5 test cases covering normal and edge cases"
+    ],
+    "weaknesses": [
+      "Fixed 4-pass limit may not be optimal for all graph types",
+      "Barycenter heuristic is approximate; NP-hard problem has no polynomial optimal solution",
+      "Does not prioritize specific edge grouping or node alignment",
+      "Minimal error handling for malformed input",
+      "No parallelization despite multiple independent passes"
+    ],
+    "test_coverage": "TestCount (5 subtests) validates crossing detection with no crossings, one crossing, multiple crossings, and empty/no-edge edge cases. TestMinimize (3 subtests) validates that crossing reduction occurs, all nodes are preserved, and single-layer inputs are handled. Uses testify/assert for assertions.",
+    "dependencies": "Standard library only (no external dependencies). Integrates with `github.com/bobcob7/godot-uml/internal/layout` which calls Minimize from the layout.go minimizeCrossings function. Used alongside layering, coordinate, and layout modules in the Sugiyama pipeline.",
+    "functionality": "Exposes two public functions: Count(upper, lower, adj) counts edge crossings between two adjacent layers; Minimize(layers, adj, n) reorders nodes within layers to reduce crossings. Internal helpers include buildReverse (reverse adjacency), reorder (barycenter sort for one layer).",
+    "files": "| File | Description |\n|------|-------------|\n| crossing.go | Core functions: Count (crossing detection), Minimize (layer reordering), buildReverse (reverse adjacency), reorder (barycenter sorting) |\n| crossing_test.go | Test suite with TestCount (5 subtests) and TestMinimize (3 subtests) covering normal, edge, and error cases |"
+  }
+}

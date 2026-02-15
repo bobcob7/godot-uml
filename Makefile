@@ -1,4 +1,4 @@
-BINARY := godot-uml
+BINARY := go-uml
 GOBIN  := $(shell pwd)/bin
 
 .PHONY: all build test lint fmt serve clean generate install-tools
@@ -6,7 +6,7 @@ GOBIN  := $(shell pwd)/bin
 all: lint test build
 
 build:
-	go build -o $(GOBIN)/$(BINARY) ./cmd/godot-uml
+	go build -o $(GOBIN)/$(BINARY) ./cmd/go-uml
 
 test:
 	go test -race -parallel 8 ./...

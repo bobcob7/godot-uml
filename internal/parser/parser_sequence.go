@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/bobcob7/godot-uml/internal/ast"
-	"github.com/bobcob7/godot-uml/internal/lexer"
+	"github.com/bobcob7/go-uml/internal/ast"
+	"github.com/bobcob7/go-uml/internal/lexer"
 )
 
 func (p *Parser) parseParticipant(kind ast.ParticipantKind) *ast.Participant {

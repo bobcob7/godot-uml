@@ -1,0 +1,32 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": ".",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:32:58Z",
+  "sections": {
+    "description": "Pure Go implementation of PlantUML diagram parser and SVG renderer supporting class and sequence diagrams.",
+    "purpose": "Provides a pure Go library and CLI tool to parse PlantUML text syntax and render diagrams to SVG without external dependencies. Enables programmatic diagram generation in Go applications and offers an HTTP server with a live editor for interactive diagram development.",
+    "strengths": [
+      "Zero external dependencies - all functionality implemented in pure Go",
+      "Comprehensive lexer, parser, and AST for PlantUML syntax",
+      "Dual diagram support - both class and sequence diagrams with specialized renderers",
+      "Modular architecture with clear separation of concerns (lexer, parser, layout, renderer, theme)",
+      "Public library API (pkg/gouml) alongside CLI and HTTP server",
+      "Golden test fixtures for regression testing SVG output",
+      "Theme engine with customizable skinparams for styling control",
+      "Font metrics system for accurate text measurement in layout calculations"
+    ],
+    "weaknesses": [
+      "Still in active development - only phases 1-2 of 13-phase plan merged",
+      "Limited PlantUML syntax coverage - parser supports core features, not all edge cases",
+      "Font metrics rely on hardcoded values rather than system font data",
+      "SVG rendering covers basic class/sequence diagram features",
+      "No comprehensive error messages for unsupported syntax",
+      "Limited documentation beyond code comments and plan files"
+    ],
+    "test_coverage": "20 test files across all major packages with 45 total Go files (44% test-to-code ratio). Test organization uses parent test functions with subtests (e.g., TestParse with t.Run subtests). Golden test files for SVG output validation. Key test areas: lexer tokenization, parser error recovery, AST construction, layout algorithms, SVG rendering, theme resolution, server endpoints, encoding, font metrics. All tests use t.Parallel().",
+    "dependencies": "No external dependencies in go.mod. Internal package graph: pkg/gouml \u2192 internal/{parser, renderer/svg, theme, ast} \u2192 internal/{lexer, layout, font, encoding, validation}. Internal tools via go.mod: golangci-lint (linting), gofumpt (formatting), and 70+ transitive dependencies for CLI tools.",
+    "functionality": "Root module exports: library API via pkg/gouml (Render, Parse, Validate, RenderDiagram with Options). CLI via cmd/go-uml (render, validate, serve commands). HTTP server via internal/server for live editing. Internal packages provide: lexical analysis (lexer), syntax tree construction (parser, ast), diagram layout algorithms (layout with coordinate/layering/crossing subpackages), SVG generation (renderer/svg), theming system (theme), font handling (font), data encoding (encoding), input validation (validation), and development tools (tools).",
+    "files": "| File/Directory | Description |\n| --- | --- |\n| go.mod | Module definition for github.com/bobcob7/go-uml at Go 1.25.5 |\n| Makefile | Build automation: test, lint, build, serve, generate, clean targets |\n| .gitignore | Ignores /bin and /go-uml binaries |\n| cmd/go-uml/ | CLI entry point with render, validate, serve, version commands |\n| pkg/gouml/ | Public library API - Render(), Parse(), Validate(), RenderDiagram() |\n| internal/lexer/ | Tokenizer for PlantUML syntax |\n| internal/parser/ | Parser with error recovery for class/sequence diagrams |\n| internal/ast/ | Abstract syntax tree node definitions |\n| internal/layout/ | Layout engine with coordinate, layering, crossing subpackages |\n| internal/renderer/svg/ | SVG output generation for class/sequence diagrams |\n| internal/theme/ | Theme engine and skinparam resolution |\n| internal/font/ | Font metrics and text measurement |\n| internal/encoding/ | Data encoding utilities |\n| internal/validation/ | Input validation routines |\n| internal/server/ | HTTP server with live editor UI |\n| internal/tools/ | Development and build tools |\n| testdata/ | Golden test fixtures (class_basic.puml/svg, sequence_basic.puml/svg) |\n| plans/ | 13-phase implementation roadmap (01-bootstrap through 13-cli) |\n| bin/ | Built binary output directory |"
+  }
+}

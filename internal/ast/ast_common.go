@@ -1,6 +1,6 @@
 package ast
 
-import "github.com/bobcob7/godot-uml/internal/lexer"
+import "github.com/bobcob7/go-uml/internal/lexer"
 
 // NotePosition indicates where a note is placed.
 type NotePosition int

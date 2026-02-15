@@ -1,0 +1,25 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "internal/layout/coordinate",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:30:01Z",
+  "sections": {
+    "description": "Package coordinate implements X,Y position assignment for nodes in the Sugiyama layout algorithm, placing nodes horizontally within layers and vertically between layers with centering.",
+    "purpose": "This package computes final coordinates for all graph nodes after the Sugiyama layout phases (cycle removal, layering, crossing minimization). It takes layered node indices and node dimensions, then assigns X,Y positions by placing nodes left-to-right within each layer and centering narrower layers relative to the widest layer.",
+    "strengths": [
+      "Simple, focused responsibility - coordinate assignment only",
+      "Efficient two-pass algorithm: horizontal pass followed by centering pass",
+      "Handles variable node sizes and maintains layer-relative centering",
+      "Well-tested with comprehensive test coverage including edge cases"
+    ],
+    "weaknesses": [
+      "Currently unexported types and functions limit standalone use",
+      "Coordinate assignment logic partially duplicated in parent layout.go",
+      "No support for custom coordinate systems or alternative layout strategies"
+    ],
+    "test_coverage": "TestAssign covers single nodes, multi-node layers, multi-layer graphs, centering logic, horizontal spacing without overlap, empty graphs, and variable node heights. All tests use t.Parallel() with table-driven subtests.",
+    "dependencies": "Depends on: testify/assert (external test dependency). No internal dependencies on other packages.",
+    "functionality": "Provides Assign() function that takes layer bucketing and node sizes, returning an array of Position structs with computed X,Y coordinates for each node.",
+    "files": "| File | Description |\n|------|-------------|\n| coordinate.go | Core implementation with Assign function, NodeSize/Position types, and layerWidth helper |\n| coordinate_test.go | Comprehensive test suite with 7 subtests covering various graph topologies and spacing scenarios |"
+  }
+}

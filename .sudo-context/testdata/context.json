@@ -1,0 +1,26 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "testdata",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:31:56Z",
+  "sections": {
+    "description": "Repository of PlantUML diagram fixtures and golden SVG output files for validating parser and renderer implementations.",
+    "purpose": "Provides baseline test fixtures and expected SVG outputs for unit and integration tests. Contains sample PlantUML diagram files (.puml) in multiple diagram types (class, sequence) along with their corresponding golden SVG outputs (.golden.svg). Used by test suites in parser and renderer packages to verify parsing accuracy and SVG rendering correctness.",
+    "strengths": [
+      "Comprehensive coverage of core diagram types (class diagrams, sequence diagrams)",
+      "Golden file pattern enables visual regression testing",
+      "Clear naming convention (diagram_type_scenario.puml and .golden.svg) makes fixtures discoverable",
+      "Fixtures exercise realistic UML features (inheritance, composition, multiplicity, participants, interactions)"
+    ],
+    "weaknesses": [
+      "Limited fixture variety - only basic scenarios currently covered",
+      "No state diagram, use case, or activity diagram fixtures",
+      "Single fixture per diagram type may miss edge cases (empty diagrams, complex hierarchies, etc.)",
+      "No fixtures for error conditions or malformed input"
+    ],
+    "test_coverage": "Not applicable \u2014 these are test fixtures. The fixtures themselves are consumed by parser and renderer test suites (parser_class_test.go, parser_sequence_test.go, class_test.go, sequence_test.go) to validate parsing and SVG rendering.",
+    "dependencies": "Internal: depends on parser (github.com/bobcob7/godot-uml/internal/parser) and SVG renderer (github.com/bobcob7/godot-uml/internal/renderer/svg). External: none \u2014 fixtures are static data files.",
+    "functionality": "Provides input test data and expected output references. Enables golden file testing patterns where generated SVG output is compared against baseline golden files. Supports regression detection for parser and renderer changes.",
+    "files": "| File | Description |\n| --- | --- |\n| class_basic.puml | PlantUML class diagram with Animal, Shape, Drawable, Color, and relationships (inheritance, realization, composition, aggregation) |\n| class_basic.golden.svg | Expected SVG output for class_basic.puml with dark theme styling and proper UML notation rendering |\n| sequence_basic.puml | PlantUML sequence diagram with Alice, Bob, DB participants, interactions, alt/else blocks, loop, and autonumber |\n| sequence_basic.golden.svg | Expected SVG output for sequence_basic.puml with proper lifelines, messages, and interaction frames |"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "internal/encoding",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:30:34Z",
+  "sections": {
+    "description": "PlantUML URL encoding/decoding package implementing DEFLATE compression with custom base64 alphabet for URL-safe representation.",
+    "purpose": "Provides bidirectional encoding and decoding of PlantUML diagram text for transmission over URLs. Uses DEFLATE compression followed by custom base64 encoding with an alphabet optimized for URL safety (0-9, A-Z, a-z, -, _). This allows PlantUML diagrams to be represented as compact, shareable URL strings.",
+    "strengths": [
+      "Clear separation of concerns with standalone Encode/Decode public API",
+      "Comprehensive test coverage including round-trip, edge cases (empty, unicode), validity, and error handling",
+      "Efficient DEFLATE compression with BestCompression level",
+      "Correct implementation of PlantUML's custom base64 alphabet mapping"
+    ],
+    "weaknesses": [
+      "No input validation or size limits (could encode arbitrarily large strings)",
+      "Error messages lack specificity for decode failures beyond invalid character position",
+      "Helper functions append4 and decode64 are unexported but could benefit from documentation"
+    ],
+    "test_coverage": "Unit tests in encoding_test.go using testify framework. Covers: round-trip encoding/decoding with normal and empty input, unicode character handling, URL-safety validation of encoded output, and error detection for invalid characters. Uses t.Parallel() for concurrent execution.",
+    "dependencies": "External: testify/assert, testify/require for testing. Standard library: bytes, compress/flate, fmt, io, strings.",
+    "functionality": "Exposes Encode(text string) and Decode(encoded string) functions that handle compression and custom base64 transformation. Used by internal/server for processing PlantUML diagrams received via URL parameters.",
+    "files": "| File | Description |\n|------|-------------|\n| encoding.go | Core implementation with Encode/Decode functions, helper functions append4 and decode64, and PlantUML custom base64 alphabet |\n| encoding_test.go | Unit tests covering round-trip, empty input, unicode, URL-safety validation, and error cases |"
+  }
+}

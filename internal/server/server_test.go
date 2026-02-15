@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/bobcob7/godot-uml/internal/encoding"
-	"github.com/bobcob7/godot-uml/internal/server"
+	"github.com/bobcob7/go-uml/internal/encoding"
+	"github.com/bobcob7/go-uml/internal/server"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -96,7 +96,7 @@ func TestServer(t *testing.T) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.Equal(t, "text/html; charset=utf-8", rec.Header().Get("Content-Type"))
 		body, _ := io.ReadAll(rec.Body)
-		assert.Contains(t, string(body), "godot-uml")
+		assert.Contains(t, string(body), "go-uml")
 		assert.Contains(t, string(body), "<textarea")
 		assert.Contains(t, string(body), "/render")
 	})

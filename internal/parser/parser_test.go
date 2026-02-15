@@ -3,8 +3,8 @@ package parser
 import (
 	"testing"
 
-	"github.com/bobcob7/godot-uml/internal/ast"
-	"github.com/bobcob7/godot-uml/internal/lexer"
+	"github.com/bobcob7/go-uml/internal/ast"
+	"github.com/bobcob7/go-uml/internal/lexer"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

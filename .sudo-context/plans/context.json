@@ -1,0 +1,30 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "plans",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:31:54Z",
+  "sections": {
+    "description": "A 13-phase implementation roadmap for building a pure Go PlantUML parser and SVG renderer, with detailed acceptance criteria and dependency tracking for each phase.",
+    "purpose": "The `plans` directory documents the phased delivery strategy for the godot-uml project, breaking down a complex PlantUML implementation into 13 sequential and parallel workstreams. Each plan file specifies acceptance criteria, dependencies, and completion status, enabling parallel development while maintaining dependency integrity. This ensures clear scope definition, progress tracking, and coordination across multiple implementation phases.",
+    "strengths": [
+      "Clear dependency graph enables parallel work on independent phases (e.g., theme engine and font metrics can proceed in parallel)",
+      "Detailed acceptance criteria in each plan provide unambiguous definition of done",
+      "Phased approach separates concerns: lexing \u2192 parsing \u2192 validation \u2192 layout \u2192 rendering \u2192 serving \u2192 CLI",
+      "Status markers (`COMPLETE`, `Pending`) make project progress easily trackable",
+      "Plans include both happy path (class/sequence diagrams) and domain concerns (theme, layout, fonts)"
+    ],
+    "weaknesses": [
+      "No timeline or effort estimates provided in individual plans",
+      "Acceptance criteria sometimes list empty checkboxes, making completion state ambiguous for some plans",
+      "No explicit rollback or failure recovery strategy documented",
+      "Limited discussion of alternative approaches or trade-offs"
+    ],
+    "test_coverage": "Not applicable \u2014 this is a documentation directory containing planning artifacts, not code with executable tests.",
+    "dependencies": {
+      "internal": "All plans depend on the core codebase architecture defined in Plan 01 (bootstrap); plans form a dependency DAG with critical paths: 03\u219204,05 | 06,07\u219208\u219209 | 05,06,07\u219210 | 09,10\u219211\u219212,13",
+      "external": "Plans reference PlantUML syntax specification and JetBrains Darcula theme palette as external requirements"
+    },
+    "functionality": "The plans directory provides the project roadmap and scope definition. It serves as the source of truth for what features are in scope, in what order they will be implemented, and what dependencies exist between phases. Developers reference plans to understand current phase requirements and to identify blockers or upstream dependencies.",
+    "files": "| File | Description |\n|---|---|\n| 01-bootstrap.md | Project setup, module initialization, CI/build infrastructure, and directory scaffolding |\n| 02-lexer.md | Tokenizer for PlantUML syntax producing typed tokens with source positions |\n| 03-ast-parser-foundation.md | AST node types and recursive descent parser framework for all diagram elements |\n| 04-class-diagram-parsing.md | Parser for class diagram syntax (classes, interfaces, enums, relationships) |\n| 05-sequence-diagram-parsing.md | Parser for sequence diagram syntax (participants, messages, fragments) |\n| 06-theme-engine.md | Theme/styling engine with Darcula default theme and skinparam override system |\n| 07-font-metrics.md | Font measurement and glyph dimension calculation for text rendering |\n| 08-layout-engine.md | Layout algorithm for positioning diagram elements with proper spacing and alignment |\n| 09-svg-renderer-class.md | SVG renderer for class diagrams converting AST to visual output |\n| 10-svg-renderer-sequence.md | SVG renderer for sequence diagrams converting AST to visual output |\n| 11-public-api.md | Public library API (`gouml` package) tying together parsing, layout, and rendering |\n| 12-http-server.md | HTTP server with PlantUML-compatible endpoints and live editor UI |\n| 13-cli.md | CLI tool for rendering files, validation, and server startup |"
+  }
+}

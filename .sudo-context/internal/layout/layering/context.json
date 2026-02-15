@@ -1,0 +1,25 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "internal/layout/layering",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:30:07Z",
+  "sections": {
+    "description": "Implements longest-path layer assignment for directed acyclic graphs using topological-sort-based BFS.",
+    "purpose": "Assigns nodes to hierarchical layers in the Sugiyama layout algorithm based on longest path distance from source nodes. This is Phase 2 of the layout algorithm, converting a graph structure into a layered representation where nodes at the same layer have no edges between them. Used by the parent layout package to position nodes vertically.",
+    "strengths": [
+      "Simple and efficient longest-path algorithm using BFS with in-degree tracking",
+      "Handles edge cases like disconnected nodes and graphs without source nodes",
+      "Correctly computes layer depths as longest path distance from any source",
+      "Clean, focused API with single exported function"
+    ],
+    "weaknesses": [
+      "Currently inline in layout.go rather than exported as a package function (minor code organization issue)",
+      "No cycle detection - assumes input DAG is acyclic (handled by removeCycles in parent)",
+      "No validation of input parameters"
+    ],
+    "test_coverage": "Comprehensive unit tests via TestAssign with 7 subtests covering: linear chains, diamond graphs, single nodes, disconnected nodes, multiple sources, long paths, and empty graphs. All tests use t.Parallel() and testify assertions.",
+    "dependencies": "Internal: none. External: testify/assert for testing.",
+    "functionality": "Provides the Assign function which performs longest-path layer assignment. Takes an adjacency list representation and node count, returns a slice where layers[i] is the assigned layer of node i. Handles graphs with no sources by assigning the first node to layer 0.",
+    "files": "| File | Description |\n|------|-------------|\n| layering.go | Core implementation of longest-path layer assignment algorithm |\n| layering_test.go | Comprehensive unit tests for Assign function with 7 test cases |"
+  }
+}

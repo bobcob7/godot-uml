@@ -1,0 +1,29 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "internal/parser",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:30:50Z",
+  "sections": {
+    "description": "Recursive descent parser that converts PlantUML token streams into an Abstract Syntax Tree (AST) for class, sequence, and other diagram types.",
+    "purpose": "Transforms lexically-tokenized PlantUML input into a structured AST representation. Implements error recovery to report multiple parse errors and supports both class diagrams (with inheritance, composition, aggregation) and sequence diagrams (with participants, messages, fragments). Auto-detects diagram type via context flags to handle different statement interpretations.",
+    "strengths": [
+      "Robust error recovery with line-level backtracking allows parsing to continue after syntax errors",
+      "Context-aware parsing (seqMode flag) disambiguates identical syntax across diagram types (arrows meaning different things in class vs sequence)",
+      "Comprehensive token stream handling with current(), peek(), advance() primitives for lookahead",
+      "Extensive test coverage with 50+ test cases spanning empty diagrams, error conditions, all relationship types, class members (fields/methods), sequence fragments (alt/loop/par), and participant types",
+      "Fixture-based tests (class_basic.puml, sequence_basic.puml) validate real-world diagram parsing",
+      "Specialized parsers for each construct (parseClassDef, parseParticipant, parseFragment, etc.) keep logic focused"
+    ],
+    "weaknesses": [
+      "No recovery from unexpected tokens within class body parsing\u2014mismatched braces cause early bailout",
+      "extends/implements keywords skip parsing without consuming the rest of line, potentially causing cascading errors",
+      "Activation shorthand tracking (++ and --) is parsed but not yet wired to AST (line 214 in parser_sequence.go)",
+      "Stereotype parsing is greedy and sensitive to spacing around << and >>, may misparse with extra whitespace",
+      "No support for backward compatibility if token types change in lexer"
+    ],
+    "test_coverage": "Comprehensive with 50+ tests organized into subtests under parent test functions (TestParse, TestParseClassDef, TestParseSequenceIdentStatement, etc.). Tests cover happy paths (basic class/sequence parsing), error conditions (missing @startuml/@enduml, mismatched braces), edge cases (empty diagrams, case-insensitive keywords), all visibility modifiers (+,-,#,~), static/field/method modifiers, all relationship types (inheritance, composition, aggregation, dependency, realization), and sequence diagram constructs (participants, messages, fragments with else clauses). Fixture tests load real .puml files to validate end-to-end parsing.",
+    "dependencies": "Imports internal/ast (AST node definitions), internal/lexer (Token types and Pos), strings (standard library), fmt (standard library). Depends on lexer to tokenize input before parsing.",
+    "functionality": "Provides Parse(input string) function to convert PlantUML text to *ast.Diagram with error reporting. Exports Parser type for advanced use (New constructor, Errors() method). Supports class definitions (ClassDef, InterfaceDef, EnumDef) with members (Field, Method), relationships (Relationship with direction and cardinality), packages/namespaces, and sequence diagram constructs (Participant, Message, Fragment, Activate, Return, Note, Divider, Delay, Autonumber). Handles both single-line and multi-line syntax variants.",
+    "files": "| File | Description |\n|------|-------------|\n| parser.go | Core parser struct, tokenization entry point (Parse function), diagram/statement/note/comment parsing, error handling |\n| parser_class.go | Class definition, interface, enum, package, and relationship parsing; visibility/modifier detection; class body member parsing |\n| parser_sequence.go | Participant, message, activate, return, fragment (alt/loop/par/break/ref/group), autonumber, divider, and delay parsing; helper functions for arrow classification |\n| parser_test.go | Tests for top-level diagram parsing, empty diagrams, comments, skinparam, case-insensitivity, error recovery, seq mode auto-detection, notes |\n| parser_class_test.go | Tests for class/interface/enum definitions, visibility/static modifiers, stereotypes, aliases, relationships (inheritance/realization/composition/aggregation/dependency), packages, and class_basic.puml fixture |\n| parser_sequence_test.go | Tests for all participant types, messages (solid/dashed/dotted arrows), activation, return, fragments (alt/loop/par/break/ref/group), autonumber, divider, delay, and sequence_basic.puml fixture |"
+  }
+}

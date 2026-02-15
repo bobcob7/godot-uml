@@ -1,0 +1,29 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "internal/server/static",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:30:06Z",
+  "sections": {
+    "description": "Static HTML assets for the live PlantUML editor web interface, embedded in the server binary at compile time.",
+    "purpose": "Provides a self-contained, interactive web editor that allows users to write PlantUML diagrams and see real-time SVG previews in the browser. The single HTML file contains all HTML markup, CSS styling, and JavaScript logic needed to communicate with the HTTP server's /render endpoint. This enables the server to be distributed as a single binary without external file dependencies.",
+    "strengths": [
+      "Self-contained single HTML file with no external dependencies",
+      "Embedded directly into Go binary using go:embed, eliminating file dependencies",
+      "Real-time rendering with 300ms debounce to avoid excessive server requests",
+      "Responsive dark-themed UI with split editor/preview layout",
+      "Clean error display with line and column information from server",
+      "Keyboard-friendly with proper focus and standard editor shortcuts"
+    ],
+    "weaknesses": [
+      "All styling and logic inline in single file makes maintenance harder than separate CSS/JS",
+      "No syntax highlighting for PlantUML code in editor",
+      "Limited accessibility features (no ARIA labels, no keyboard navigation hints)",
+      "Error messages depend on server validation, no client-side hints",
+      "Fixed default diagram makes it less welcoming for new users wanting to start blank"
+    ],
+    "test_coverage": "Tested indirectly through server_test.go's TestServer cases: GetEditor test verifies HTML loads correctly with expected elements (textarea, go-uml title, /render reference); PostRender tests verify the client-side fetch logic works with valid/invalid/empty inputs by checking server responses.",
+    "dependencies": "No external dependencies. Depends on internal server module to embed this directory and serve it via handleEditor() function. The embedded JavaScript calls the /render POST endpoint which depends on internal/encoding and pkg/gouml for diagram processing.",
+    "functionality": "Delivers the interactive web UI that enables live editing and preview of PlantUML diagrams. Provides textarea for diagram input, renders SVG output, displays validation errors with location info, and includes status indicators. The JavaScript handles debounced requests to server, error formatting, and real-time UI updates.",
+    "files": "| File | Description |\n| --- | --- |\n| index.html | Complete single-file HTML editor with embedded CSS and JavaScript for live PlantUML diagram editing and preview |"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "pkg/gouml",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:31:07Z",
+  "sections": {
+    "description": "Public library API for rendering PlantUML diagrams to SVG format.",
+    "purpose": "Provides a clean, user-facing interface for parsing and rendering PlantUML diagrams in Go applications. Acts as the primary entry point for the godot-uml project, exposing high-level functions like Render, Parse, and Validate while abstracting internal implementation details. Supports both class and sequence diagrams with customizable theme and skinparam options.",
+    "strengths": [
+      "Clean public API with minimal surface area (Render, Parse, Validate, RenderDiagram functions)",
+      "Comprehensive error handling with line/column position information",
+      "Flexible option pattern for theme customization and skinparam overrides",
+      "Automatic diagram type detection (class vs sequence) for correct renderer selection",
+      "Error recovery allows parsing to continue and report multiple issues",
+      "Well-tested with 100% test coverage across main use cases"
+    ],
+    "weaknesses": [
+      "Error handling returns first error from Render() rather than all errors",
+      "Limited input validation before parser invocation",
+      "No logging support for debugging render issues",
+      "Opaque Diagram type requires users to parse first before rendering separately"
+    ],
+    "test_coverage": "Comprehensive test coverage via gouml_test.go using table-driven subtests. Tests include: Render happy path (class/sequence/empty diagrams), WithSkinparam customization, WithTheme customization, invalid input handling, read errors, Parse validation, RenderDiagram with type detection, Validate standalone usage. All tests use t.Parallel() and assert patterns from testify.",
+    "dependencies": "Internal: github.com/bobcob7/go-uml/internal/ast, /internal/parser, /internal/renderer/svg, /internal/theme. External: github.com/stretchr/testify (testing only)",
+    "functionality": "Exposes 4 main functions and 2 option constructors: Render(io.Reader, io.Writer, ...Option) reads PlantUML and writes SVG; RenderDiagram(io.Writer, *Diagram, ...Option) renders pre-parsed diagrams; Parse(io.Reader) parses to AST; Validate(io.Reader) validates without rendering; WithTheme(*theme.Theme) sets custom theme; WithSkinparam(string, string) overrides individual properties. Returns *Error type with line/column information for error reporting.",
+    "files": "| File | Description |\n| --- | --- |\n| gouml.go | Main public API implementation with Render, Parse, RenderDiagram, Validate functions and option types |\n| gouml_test.go | Comprehensive test suite covering all public functions with various input scenarios and options |"
+  }
+}

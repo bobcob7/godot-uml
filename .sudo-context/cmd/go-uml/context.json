@@ -1,0 +1,27 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "cmd/go-uml",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:30:33Z",
+  "sections": {
+    "description": "CLI entry point for go-uml that provides commands to render, validate, and serve PlantUML diagrams.",
+    "purpose": "Implements the command-line interface for the go-uml tool. Dispatches user commands to appropriate handlers (render, validate, serve) and manages argument parsing, file I/O, and error handling. Serves as the main executable entry point with support for stdin/stdout piping.",
+    "strengths": [
+      "Clean command dispatch pattern with dedicated handler functions",
+      "Flexible file I/O supporting both file paths and stdin/stdout",
+      "Comprehensive test coverage including unit tests and integration tests via binary execution",
+      "Proper exit code semantics distinguishing validation errors from system errors",
+      "Well-structured argument parsing with support for optional flags"
+    ],
+    "weaknesses": [
+      "Validation error detection relies on string pattern matching rather than structured error types",
+      "Help text is duplicated in parseRenderArgs function instead of centralized",
+      "Binary build test in TestBinary is slower than unit tests and increases test runtime",
+      "Limited command history or recovery on interrupted operations"
+    ],
+    "test_coverage": "Comprehensive test coverage with TestParseRenderArgs covering file, stdin, output flag ordering, and help scenarios. TestCmdRender tests file-to-file rendering, missing files, and invalid diagrams. TestCmdValidate tests valid/invalid files and missing files. TestBinary integration tests the compiled binary with version, help, command dispatch, render, and validate subcommands.",
+    "dependencies": "Internal: github.com/bobcob7/go-uml/internal/server (HTTP server with live editor), github.com/bobcob7/go-uml/pkg/gouml (PlantUML rendering and validation). External: standard library (flag, fmt, os, strings), testify (testing framework).",
+    "functionality": "Provides four main commands: (1) render - converts PlantUML files to SVG with optional file output, supports stdin/stdout piping; (2) validate - checks PlantUML file syntax with line/column error reporting; (3) serve - starts HTTP server for interactive diagram editing with configurable host/port; (4) version - displays version info. Exits with code 0 for success, 1 for validation errors, 2 for system errors.",
+    "files": "| File | Description |\n| --- | --- |\n| main.go | CLI entry point with command dispatch, cmdRender, cmdValidate, cmdServe handlers, argument parsing, and error classification. Version injected at build time via ldflags. |\n| main_test.go | Unit and integration tests including parseRenderArgs, cmdRender, cmdValidate, and TestBinary which builds and tests the compiled binary. Helper functions for temp file creation. |"
+  }
+}

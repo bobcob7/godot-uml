@@ -1,0 +1,30 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "internal/renderer/svg",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:30:07Z",
+  "sections": {
+    "description": "SVG rendering package that converts PlantUML class and sequence diagrams into standards-compliant SVG output with full theme support.",
+    "purpose": "This package provides the final rendering stage for two diagram types: ClassRenderer transforms class/interface/enum definitions and relationships into SVG box-and-line diagrams, while SequenceRenderer handles sequence diagrams with participants, messages, and control flow fragments. Both renderers respect theme colors, fonts, and sizing parameters through the theme.Resolver dependency.",
+    "strengths": [
+      "Separation of concerns: ClassRenderer and SequenceRenderer handle distinct diagram paradigms independently",
+      "Comprehensive layout: Integrates with layout.Package for graph positioning of class elements and handles participant spacing for sequence diagrams",
+      "Theme integration: Full support for theme customization via theme.Resolver with Darcula defaults",
+      "Complete diagram features: Supports all UML constructs tested (relationships, cardinality, notes, packages, fragments, activation bars, dividers)",
+      "Robust text rendering: Uses font.MeasureText for accurate sizing of labels and member lists",
+      "XML safety: Proper escaping of special characters in SVG output"
+    ],
+    "weaknesses": [
+      "Large render methods: ClassRenderer.Render() is 200+ lines; SequenceRenderer.Render() is 60+ lines with complex branching",
+      "Mixed concerns: Position calculation and SVG generation tightly coupled within single methods",
+      "Limited error handling: Silent failures when nodes are nil rather than bubbling up errors",
+      "Hardcoded layout constants: Spacing values (diagramPadding, seqMessageSpacing, etc.) scattered throughout, not configurable",
+      "No validation: Doesn't validate diagram structure before rendering (e.g., circular relationships, orphaned nodes)",
+      "Tight coupling to ast.* types: Direct dependencies on AST structures limit reusability"
+    ],
+    "test_coverage": "High coverage with 40+ unit tests across class_test.go and sequence_test.go. Tests verify: empty diagrams, single/multiple elements, all relationship types, visibility icons, modifiers, themes, XML escaping, golden file comparison, and valid SVG 1.1 output. Tests use t.Parallel() subtests, require/assert from testify, and nil resolver defaults to Darcula theme. Golden files compare full SVG output against baseline.",
+    "dependencies": "Internal: github.com/bobcob7/go-uml/internal/ast (diagram AST definitions), github.com/bobcob7/go-uml/internal/font (text measurement), github.com/bobcob7/go-uml/internal/layout (graph layout engine for class positioning), github.com/bobcob7/go-uml/internal/theme (color/styling resolution). External: standard library (fmt, io, math, strings). Note: ajstarks/svgo is in go.mod but not directly imported (svgo.v0 in package comment, direct SVG string construction used instead).",
+    "functionality": "Provides two public rendering functions: (1) ClassRenderer.Render(io.Writer, *ast.Diagram) renders class/interface/enum definitions with fields/methods, relationships (inheritance, composition, aggregation, dependency, association), cardinality labels, notes, and packages. (2) SequenceRenderer.Render(io.Writer, *ast.Diagram) renders sequence diagrams with participant boxes (standard, actor, database), lifelines, messages (sync/async), activation ranges, notes, fragments (alt/else/loop/par/break/ref/group), dividers, delays, and autonumbering. Both accept nil theme.Resolver and default to Darcula palette.",
+    "files": "| File | Description |\n| --- | --- |\n| svg.go | Package documentation (empty file, 2 lines) |\n| class.go | ClassRenderer type with Render method, measurement helpers (measureClass, measureInterface, measureEnum, measureMembers), and SVG generation for boxes, relationships, arrows, notes, and packages (795 lines) |\n| sequence.go | SequenceRenderer type with Render method, participant/event layout, fragment/divider/delay rendering, and message handling with autonumbering support (691 lines) |\n| class_test.go | 16 test cases covering ClassRenderer: empty diagrams, single/multiple classes, interfaces, enums, relationships, notes, packages, visibility, modifiers, themes, XML escaping, golden files, and valid SVG output (391 lines) |\n| sequence_test.go | 19 test cases covering SequenceRenderer: empty diagrams, participants (standard/actor/database), messages (sync/async), notes (left/right/over), fragments (alt/else, loop, par/break/ref/group), dividers, delays, autonumbering, themes, implicit participants, golden files, and valid SVG output (376 lines) |"
+  }
+}

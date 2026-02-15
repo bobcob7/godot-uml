@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/bobcob7/godot-uml/internal/parser"
-	"github.com/bobcob7/godot-uml/internal/renderer/svg"
-	"github.com/bobcob7/godot-uml/internal/theme"
+	"github.com/bobcob7/go-uml/internal/parser"
+	"github.com/bobcob7/go-uml/internal/renderer/svg"
+	"github.com/bobcob7/go-uml/internal/theme"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

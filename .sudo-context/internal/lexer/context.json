@@ -1,0 +1,27 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "internal/lexer",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:30:49Z",
+  "sections": {
+    "description": "Lexer tokenizes PlantUML text into a stream of typed tokens for downstream parsing.",
+    "purpose": "Provides lexical analysis of PlantUML diagram syntax, converting raw text into semantic tokens. Handles both class and sequence diagram keywords, punctuation, arrows, comments, and modifiers. Tracks line and column positions for error reporting.",
+    "strengths": [
+      "Complete PlantUML keyword coverage (class, sequence, directives, modifiers)",
+      "Comprehensive arrow support (solid, dashed, various endpoints and heads)",
+      "Accurate position tracking (line and column) for all tokens",
+      "Proper handling of edge cases (escaped strings, unterminated comments, whitespace)",
+      "Clear separation between keywords and identifiers via lookup map",
+      "UTF-8 support via proper rune decoding"
+    ],
+    "weaknesses": [
+      "Large switch statement in NextToken could be refactored for maintainability",
+      "Arrow parsing logic spread across multiple helper functions (readDashStart, readArrowFrom, continueArrow, etc.)",
+      "No support for multi-character operators beyond arrows (could add <<, >>, etc. if needed)"
+    ],
+    "test_coverage": "Extensive test suite covering: diagram delimiters, all keywords, identifiers with underscores and digits, string literals with escaping, numbers (integers and decimals), all punctuation symbols, visibility markers, modifiers, all arrow types, single/block comments, newlines, source positions, error tokens, empty input, whitespace handling, skinparam, and TokenType.String() formatting. Tests use table-driven subtests with t.Parallel().",
+    "dependencies": "Internal: token types and positions used by internal/ast package. External: standard library only (strings, unicode, unicode/utf8, fmt, testify for assertions).",
+    "functionality": "Exports Lexer (constructor New, methods Tokenize and NextToken), Token/TokenType types, and Pos (position tracking). Processes PlantUML source text and produces a token stream with semantic type information and source locations, enabling downstream parsers to build ASTs.",
+    "files": "| File | Description |\n| --- | --- |\n| lexer.go | Core lexer implementation with character-by-character scanning, token recognition, and multi-character token assembly (arrows, strings, comments, keywords). |\n| token.go | Token type definitions (TokenType constants), Token struct with type/literal/position, and Pos struct for line:column tracking. |\n| lexer_test.go | Comprehensive test suite with 28+ test functions covering all token types, edge cases, and position tracking. |\n| tokentype_string.go | Auto-generated String() method for TokenType via stringer tool for debug output. |"
+  }
+}

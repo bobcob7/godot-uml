@@ -1,0 +1,27 @@
+{
+  "repo": "bobcob7/godot-uml",
+  "directory": "internal/font",
+  "git_ref": "2c45cdb",
+  "updated_at": "2026-02-14T17:30:36Z",
+  "sections": {
+    "description": "Provides font metrics and text measurement capabilities using embedded TTF fonts from golang.org/x/image/font/gofont packages.",
+    "purpose": "Handles text measurement for the SVG rendering pipeline by computing pixel dimensions of text at specified font sizes and families. Supports single-line and multi-line text measurement with caching of parsed fonts to avoid redundant parsing. Enables accurate layout calculations for diagram elements that contain text labels.",
+    "strengths": [
+      "Efficient font parsing with mutex-protected cache for thread-safe reuse",
+      "Support for three font families (sans, mono, bold) via embedded Go fonts with no external dependencies",
+      "Accurate multi-line text handling with per-line width calculation and total height computation",
+      "Comprehensive test coverage including edge cases (empty strings, varying font sizes, multiple font families)",
+      "Fixed-point to float conversion properly scaled for OpenType metrics"
+    ],
+    "weaknesses": [
+      "Limited to three hardcoded font families with no extensibility for custom fonts",
+      "No font fallback mechanism if parsing fails",
+      "Cache never evicts entries, potentially accumulating memory over long-running processes",
+      "No metrics caching\u2014every measurement creates and closes a new font face"
+    ],
+    "test_coverage": "Comprehensive functional tests covering single-line text, empty strings, multi-line text, font size scaling, all three font families, monospace equal-width character validation, multi-line max width calculation, known dimension bounds, and three-line height calculations. All tests use t.Parallel() and follow testify patterns with require/assert.",
+    "dependencies": "External: golang.org/x/image/font (opentype, gofont packages), sync (stdlib). Internal: None.",
+    "functionality": "Exports MeasureText(text, fontSize, family) function that returns pixel Size (Width, Height) for text rendering. Defines Family constants (FamilySans, FamilyMono, FamilyBold) and Size struct. Internally manages font face creation, caching, and fixed-point arithmetic conversions.",
+    "files": "| File | Description |\n| --- | --- |\n| font.go | Core implementation with MeasureText public API, font family constants, face creation, and cached font parsing |\n| font_test.go | Test suite with 11 test cases covering single/multi-line text, empty strings, font scaling, all font families, and dimension validation |"
+  }
+}

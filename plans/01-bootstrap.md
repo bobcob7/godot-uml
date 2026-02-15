@@ -10,7 +10,7 @@
 - [x] `go test ./...` runs (even if no tests yet)
 - [x] `make lint`, `make test`, `make build` targets work
 - [x] `.context.md` files exist for all directories
-- [x] `go.mod` declares module path `github.com/bobcob7/godot-uml`
+- [x] `go.mod` declares module path `github.com/bobcob7/go-uml`
 
 ## Dependencies
 
