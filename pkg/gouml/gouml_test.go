@@ -149,6 +149,23 @@ func TestRenderDiagram(t *testing.T) {
 		// Sequence diagrams have lifeline dashes
 		assert.Contains(t, out, `stroke-dasharray="5,5"`)
 	})
+	t.Run("ImplicitSequenceDetection", func(t *testing.T) {
+		t.Parallel()
+		input := strings.NewReader("@startuml\nBob -> Alice: hello\nAlice -> Tom: Bob says hello\nnote over Alice\nShoots Tom\nend note\nAlice --> Bob: done\n@enduml")
+		diagram, errs := gouml.Parse(input)
+		require.Empty(t, errs)
+		var buf bytes.Buffer
+		err := gouml.RenderDiagram(&buf, diagram)
+		require.NoError(t, err)
+		out := buf.String()
+		assert.Contains(t, out, `stroke-dasharray="5,5"`, "should have lifeline dashes")
+		assert.Contains(t, out, "Bob")
+		assert.Contains(t, out, "Alice")
+		assert.Contains(t, out, "Tom")
+		assert.Contains(t, out, "hello")
+		assert.Contains(t, out, "Shoots Tom")
+		assert.Contains(t, out, "done")
+	})
 	t.Run("ClassDetection", func(t *testing.T) {
 		t.Parallel()
 		input := strings.NewReader("@startuml\nclass Foo {\n+name : String\n}\n@enduml")

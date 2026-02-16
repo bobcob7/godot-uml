@@ -187,6 +187,92 @@ func TestParseMessage(t *testing.T) {
 	})
 }
 
+func TestIsSequenceArrow(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name  string
+		arrow string
+		want  bool
+	}{
+		{"RightSolid", "->", true},
+		{"LeftSolid", "<-", true},
+		{"Bidirectional", "<->", true},
+		{"DashedRight", "-->", false},
+		{"DashedLeft", "<--", false},
+		{"Inheritance", "--|>", false},
+		{"Realization", "..|>", false},
+		{"Composition", "--*", false},
+		{"Aggregation", "--o", false},
+		{"Dependency", "..>", false},
+		{"PlainDouble", "--", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, tt.want, isSequenceArrow(tt.arrow))
+		})
+	}
+}
+
+func TestImplicitSequenceMode(t *testing.T) {
+	t.Parallel()
+	t.Run("SolidArrowWithoutParticipant", func(t *testing.T) {
+		t.Parallel()
+		diagram, errs := Parse("@startuml\nBob -> Alice : hello\n@enduml")
+		require.Empty(t, errs)
+		require.Len(t, diagram.Statements, 1)
+		m, ok := diagram.Statements[0].(*ast.Message)
+		require.True(t, ok, "expected *ast.Message, got %T", diagram.Statements[0])
+		assert.Equal(t, "Bob", m.From)
+		assert.Equal(t, "Alice", m.To)
+		assert.Equal(t, "hello", m.Label)
+		assert.False(t, m.Dashed)
+	})
+	t.Run("DashedArrowAfterSolid", func(t *testing.T) {
+		t.Parallel()
+		input := "@startuml\nAlice -> Bob : hi\nBob --> Alice : bye\n@enduml"
+		diagram, errs := Parse(input)
+		require.Empty(t, errs)
+		require.Len(t, diagram.Statements, 2)
+		m1, ok := diagram.Statements[0].(*ast.Message)
+		require.True(t, ok, "stmt 0: expected *ast.Message, got %T", diagram.Statements[0])
+		assert.Equal(t, "Alice", m1.From)
+		assert.False(t, m1.Dashed)
+		m2, ok := diagram.Statements[1].(*ast.Message)
+		require.True(t, ok, "stmt 1: expected *ast.Message, got %T", diagram.Statements[1])
+		assert.Equal(t, "Bob", m2.From)
+		assert.True(t, m2.Dashed)
+	})
+	t.Run("FullDiagramWithNotes", func(t *testing.T) {
+		t.Parallel()
+		input := "@startuml\nBob -> Alice: hello\nAlice -> Tom: Bob says hello\nnote over Alice\nShoots Tom\nend note\nAlice --> Bob: done\n@enduml"
+		diagram, errs := Parse(input)
+		require.Empty(t, errs)
+		require.Len(t, diagram.Statements, 4)
+		_, ok := diagram.Statements[0].(*ast.Message)
+		assert.True(t, ok, "stmt 0: expected *ast.Message, got %T", diagram.Statements[0])
+		_, ok = diagram.Statements[1].(*ast.Message)
+		assert.True(t, ok, "stmt 1: expected *ast.Message, got %T", diagram.Statements[1])
+		n, ok := diagram.Statements[2].(*ast.Note)
+		require.True(t, ok, "stmt 2: expected *ast.Note, got %T", diagram.Statements[2])
+		assert.Equal(t, "Alice", n.Target)
+		assert.Equal(t, "Shoots Tom", n.Text)
+		m, ok := diagram.Statements[3].(*ast.Message)
+		require.True(t, ok, "stmt 3: expected *ast.Message, got %T", diagram.Statements[3])
+		assert.Equal(t, "Alice", m.From)
+		assert.Equal(t, "Bob", m.To)
+		assert.True(t, m.Dashed)
+	})
+	t.Run("ClassRelationshipUnchanged", func(t *testing.T) {
+		t.Parallel()
+		diagram, errs := Parse("@startuml\nFoo --> Bar : uses\n@enduml")
+		require.Empty(t, errs)
+		require.Len(t, diagram.Statements, 1)
+		_, ok := diagram.Statements[0].(*ast.Relationship)
+		assert.True(t, ok, "expected *ast.Relationship for --> arrow, got %T", diagram.Statements[0])
+	})
+}
+
 func TestParseActivate(t *testing.T) {
 	t.Parallel()
 	t.Run("Activate", func(t *testing.T) {

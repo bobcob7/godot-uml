@@ -215,6 +215,15 @@ func (p *Parser) parseMessage(pos lexer.Pos, from string) *ast.Message {
 	return msg
 }
 
+// isSequenceArrow returns true if the arrow is unambiguously a sequence diagram
+// arrow. Single-dash arrows like -> and <- are only valid in sequence diagrams,
+// while double-dash arrows like --> and --|> are used in class diagrams.
+func isSequenceArrow(arrow string) bool {
+	shaft := strings.TrimLeft(arrow, "<|")
+	shaft = strings.TrimRight(shaft, ">|*o")
+	return shaft == "-"
+}
+
 func isDashedArrow(arrow string) bool {
 	shaft := strings.TrimLeft(arrow, "<|")
 	shaft = strings.TrimRight(shaft, ">|*o")

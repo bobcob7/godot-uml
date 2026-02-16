@@ -290,6 +290,10 @@ func (p *Parser) parseIdentStatement() ast.Statement {
 		p.advance()
 	}
 	if p.current().Type == lexer.TokenArrow {
+		if leftCard == "" && isSequenceArrow(p.current().Literal) {
+			p.seqMode = true
+			return p.parseMessage(pos, leftName)
+		}
 		return p.parseRelationship(pos, leftName, leftCard)
 	}
 	p.skipToNextLine()
